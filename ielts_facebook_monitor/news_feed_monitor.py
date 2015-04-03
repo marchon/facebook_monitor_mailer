@@ -37,11 +37,15 @@ class NewsFeedMonitor(object):
                 'access_token': self.access_token, 'format': 'json',
                 'filter': 'owner'})
         if 'data' not in request.json():
+            print(request.json())
             raise ValueError('Failed authentication')
         return request.json()['data']
 
     def get_post_keywords(self, post):
         ''' return a counter of keywords from selected fields '''
+        # create this as a separate Post class
+        # lower-caserize keywords
+        # list other features for comparison
         keyword_counter = collections.Counter()
         for field in self.search_fields:
             if field not in post:
@@ -65,13 +69,16 @@ class NewsFeedMonitor(object):
         try:
             posts = self.get_feed_posts()
         except ValueError:
+            print('Read Feed: Failed to get data')
             self.failure_count += 1
             return []
         # successfully retrieved news feed: process posts
         flagged_posts = []
+        new_post_counter = 0
         for post in posts:
             if post['id'] not in self.processed_posts:
                 # not seen before - process this post
+                new_post_counter += 1
                 keyword_counter = self.get_post_keywords(post)
                 # count the number of posts each keyword appears in
                 self.keyword_frequency.update(keyword_counter.keys())
@@ -79,14 +86,18 @@ class NewsFeedMonitor(object):
                 # check for flags
                 if self.flag_post(post):
                     flagged_posts.append(post)
+        print('Read Feed: Processed {0} new posts and flagged {1}'.format(
+            new_post_counter, len(flagged_posts)))
         return flagged_posts
 
     def mail_post(self, post):
         ''' send a post as an email '''
+        print('Emailing post {0} to {1}'.format(
+            post['id'], self.mail_targets))
         if self.mailer is None:
             raise ValueError('Mailer not configured')
         message = Message(
-            subject='NewsFeedMonitor flagged a post',
+            subject='NewsFeedMonitor flagged post with id {0}'.format(post['id']),
             sender=self.mail_settings['mail.username'],
             recipients=self.mail_targets, body=str(post))
         self.mailer.send(message)
@@ -94,5 +105,6 @@ class NewsFeedMonitor(object):
 
     def watch_task(self):
         ''' process the news feed and email flagged posts '''
-        for flagged_post in self.read_news_feed():
+        flagged_posts = self.read_news_feed()
+        for flagged_post in flagged_posts:
             self.mail_post(flagged_post)

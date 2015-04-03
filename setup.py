@@ -13,9 +13,9 @@ requires = [
     ]
 
 setup(
-    name='ielts',
+    name='ielts_facebook_monitor',
     version='0.0',
-    description='ielts',
+    description='ielts_facebook_monitor',
     long_description=README,
     classifiers=[
         "Programming Language :: Python",
@@ -32,5 +32,5 @@ setup(
     zip_safe=False,
     install_requires=requires,
     tests_require=requires,
-    test_suite="ielts",
+    test_suite="ielts_facebook_monitor",
     )

@@ -3,6 +3,8 @@ import configparser
 import operator
 import time
 
+from news_feed_monitor import NewsFeedMonitor
+
 
 def get_monitor():
     credentials = configparser.ConfigParser()
@@ -19,7 +21,7 @@ def get_monitor():
     access_token = credentials['facebook']['access_token']
 
     monitor = NewsFeedMonitor(
-        access_token=ACCESS_TOKEN, keywords=['cats'],
+        access_token=access_token, keywords=['cats', 'cat', 'life'],
         search_fields=['message', 'description', 'caption', 'story'],
         mail_settings=mail_settings, mail_targets=['simon.bowly@gmail.com'])
 
@@ -47,3 +49,14 @@ def collect_feed_stats():
         print(row)
 
     print('Processed posts: ', len(monitor.processed_posts))
+
+
+def run_watcher_continuous(delay, iterations):
+    monitor = get_monitor()
+    for i in range(iterations):
+        monitor.watch_task()
+        time.sleep(delay)
+
+
+if __name__ == '__main__':
+    run_watcher_continuous(60, 60)
