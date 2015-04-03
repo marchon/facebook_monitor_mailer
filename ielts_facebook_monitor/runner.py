@@ -19,11 +19,12 @@ def get_monitor():
         'mail.username': credentials['mail']['username'],
         'mail.password': credentials['mail']['password']}
     access_token = credentials['facebook']['access_token']
+    send_to = credentials['mail']['send_to']
 
     monitor = NewsFeedMonitor(
         access_token=access_token, keywords=['cats', 'cat', 'life'],
         search_fields=['message', 'description', 'caption', 'story'],
-        mail_settings=mail_settings, mail_targets=['simon.bowly@gmail.com'])
+        mail_settings=mail_settings, mail_target=[send_to])
 
     return monitor
 

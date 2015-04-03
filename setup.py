@@ -13,9 +13,9 @@ requires = [
     ]
 
 setup(
-    name='ielts_facebook_monitor',
+    name='facebook_monitor_mailer',
     version='0.0',
-    description='ielts_facebook_monitor',
+    description='facebook_monitor_mailer',
     long_description=README,
     classifiers=[
         "Programming Language :: Python",
@@ -26,11 +26,11 @@ setup(
     author='',
     author_email='',
     url='',
-    keywords='web pyramid pylons pyramid_mailer facebook',
+    keywords='web pyramid pyramid_mailer facebook',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
     install_requires=requires,
     tests_require=requires,
-    test_suite="ielts_facebook_monitor",
+    test_suite="facebook_monitor_mailer",
     )
