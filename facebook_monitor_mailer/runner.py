@@ -24,7 +24,7 @@ def get_monitor():
     monitor = NewsFeedMonitor(
         access_token=access_token, keywords=['cats', 'cat', 'life'],
         search_fields=['message', 'description', 'caption', 'story'],
-        mail_settings=mail_settings, mail_target=[send_to])
+        mail_settings=mail_settings, mail_targets=[send_to])
 
     return monitor
 
